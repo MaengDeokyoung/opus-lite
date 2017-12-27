@@ -32,7 +32,7 @@ li {
       display: inline-block;
       height: 4px;
       opacity: 0;
-      background-color: #aaa;
+      transition: height 0.3s ease-out;
 
       &:hover {
         opacity: 1;
@@ -42,22 +42,10 @@ li {
     & .opl-tree__node__border--bottom {
       bottom: 0;
     }
-    & .opl-tree__node__border--bottom:hover {
-      opacity: 0;
-    }
-
-    //& .opl-tree__node--expand > .opl-tree__node__border--bottom {
-    //  bottom: -2px;
-    //}
 
     & .opl-tree__node__border--top {
       top: 0;
     }
-
-    & .opl-tree__node__border--top:hover {
-      opacity: 0;
-    }
-
   }
 
   &__node {
@@ -99,6 +87,7 @@ li {
       border-bottom:4px solid transparent;
       border-right: none;
       border-left: 4px solid $black-alpha-20;
+      transition: all 0.1s ease-out;
       //font-family: "opus-icon-font";
       //font-style: normal;
       //font-weight: normal;
@@ -167,11 +156,13 @@ li {
     //}
 
     &--dragged {
-      //display: none;
+      display: none;
       content: 'aaa';
       position: absolute;
       left: 10px;
       top: 10px;
+      color: $black-alpha-80;
+      pointer-events:none;
 
       & > .opl-tree__node--dragged__title {
         cursor: pointer;
@@ -180,21 +171,38 @@ li {
         padding: 5px 10px;
         border-radius: 2px;
         border: 2px solid rgba(242, 61, 61, 0.8);
-        background-color: rgba(242, 61, 61, 0.6);
-        font-size: 12px;
+        background-color: rgba(242, 61, 61, 1);
+        color: white;
+        font-size: 14px;
       }
-      &.opl-tree__node--drop-possible span {
+      &.opl-tree__node--drop-possible > .opl-tree__node--dragged__title {
         border-color: rgba(50, 166, 98, .8);
-        background-color: rgba(50, 166, 98, .6);
+        background-color: rgba(50, 166, 98, 1);
+      }
+      &__status:before {
+        content:' ';
+        position: absolute;
+        width:15px;
+        height:2px;
+        background-color: rgba(0, 0, 0, 0.5);
+        top: calc(50% - 1px);
+        left: -17px;
       }
       &__status {
-        position: absolute;
-        font-size: 14px;
-
+        position: relative;
+        margin-left: 15px;
+        display: inline-block;
+        font-size: 12px;
+        background-color: white;
+        line-height: 16px;
+        padding: 5px 15px;
+        border-radius: 18px;
+        border: 2px solid rgba(0, 0, 0, 0.5);
       }
       &__status-icon {
         font-family: opus-icon-font;
         margin-left: 10px;
+        line-height: 16px;
         font-style: normal;
         font-weight: normal;
         speak: none;
@@ -204,10 +212,9 @@ li {
         text-align: center;
         font-variant: normal;
         text-transform: none;
-        line-height: 1em;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        font-size: 20px;
+        font-size: 16px;
 
       }
     }
