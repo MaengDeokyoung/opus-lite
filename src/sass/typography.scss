@@ -1,0 +1,71 @@
+@import "variable";
+
+h1, h2, h3, h4, h5, h6, p {
+  color: $text-color-default;
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 300;
+  font-style: normal;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: 300;
+  font-style: normal;
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 300;
+  font-style: normal;
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 300;
+  font-style: normal;
+}
+
+h5 {
+  font-size: 13px;
+  font-weight: 300;
+  font-style: normal;
+}
+
+h6 {
+  font-size: 12px;
+  font-weight: 300;
+  font-style: normal;
+}
+
+small {
+  font-size: 11px;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.opl-text-color-default {
+  color: $text-color-default;
+}
+
+.opl-text-color-sub {
+  color: $text-color-sub;
+}
+
+.opl-text-color-hint {
+  color: $text-color-hint;
+}
+
+.opl-text-color-default--light {
+  color: $text-color-default--light;
+}
+
+.opl-text-color-sub--light {
+  color: $text-color-sub--light;
+}
+
+.opl-text-color-hint--light {
+  color: $text-color-hint--light;
+}

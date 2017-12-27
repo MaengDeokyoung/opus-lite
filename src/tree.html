@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, max-scale=1.0, user-scalable=0">
+
+    <title>Tree</title>
+    <link rel="stylesheet" href="./icon/css/opus-icon-font.css">
+    <link rel="stylesheet" href="./css/opus.min.css">
+    <script src="./js/ui_handler.js"></script>
+    <script src="./js/opus_tree.js"></script>
+    <script src="./js/opus_check_box.js"></script>
+</head>
+<body>
+
+
+<input id="search-input" type="text"/>
+<div id="tree-with-search" class="opl-tree opl-js-tree opl-tree--has-check"></div>
+<br>
+<br>
+<div id="tree-with-check"  class="opl-tree opl-js-tree opl-tree--draggable"></div>
+<br>
+<div id="tree-data"></div>
+<script>
+    var treeData1 = JSON.parse('{' +
+        '"data": [' +
+        '{' +
+        '"name": "OPUS",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Introduction",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Style & Form",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "PC Guide",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Layout",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Basic Layout Rules",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Header",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Navigation",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Contents Area",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Footer",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '},' +
+        '{' +
+        '"name": "Component",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Badge",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Button",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Chips",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Controls",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Location Information",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '' +
+        '},' +
+        '{' +
+        '"name": "Pattern",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Card",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Chatting",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "First Time Guide",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Search & Filter",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "User Information",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '}' +
+        ']' +
+        '},' +
+        '{' +
+        '"name": "Mobile Guide",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Animation",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Layout",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Basic Layout Rules",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Top bar",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Bottom bar",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Drawer",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '},' +
+        '{' +
+        '"name": "Component",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Badge",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Button",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Chips",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Controls",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '},' +
+        '{' +
+        '"name": "Pattern",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Card",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Chatting",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "First Time Guide",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Search & Filter",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "User Information",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '}' +
+        ']' +
+        '},' +
+        '{' +
+        '"name": "Check List",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Revision History",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '}' +
+        ']' +
+        '}');
+
+    var treeData2 = JSON.parse('{' +
+        '"data": [' +
+        '{' +
+        '"name": "OPUS",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Introduction",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Style & Form",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "PC Guide",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Layout",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Basic Layout Rules",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Header",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Navigation",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Contents Area",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Footer",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '},' +
+        '{' +
+        '"name": "Component",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Badge",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Button",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Chips",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Controls",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Location Information",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '' +
+        '},' +
+        '{' +
+        '"name": "Pattern",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Card",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Chatting",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "First Time Guide",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Search & Filter",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "User Information",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '}' +
+        ']' +
+        '},' +
+        '{' +
+        '"name": "Mobile Guide",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Animation",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Layout",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Basic Layout Rules",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Top bar",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Bottom bar",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Drawer",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '},' +
+        '{' +
+        '"name": "Component",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Badge",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Button",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Chips",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Controls",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '},' +
+        '{' +
+        '"name": "Pattern",' +
+        '"childNodes": [' +
+        '{' +
+        '"name": "Card",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Chatting",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "First Time Guide",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Search & Filter",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "User Information",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '}' +
+        ']' +
+        '},' +
+        '{' +
+        '"name": "Check List",' +
+        '"childNodes": []' +
+        '},' +
+        '{' +
+        '"name": "Revision History",' +
+        '"childNodes": []' +
+        '}' +
+        ']' +
+        '}' +
+        ']' +
+        '}');
+
+    function assignId(datas, type, parentId){
+        for (var i = 0 ; i < datas.length ; i++) {
+            datas[i].id = generateId(type);
+            datas[i].parentId = parentId || 'N/A';
+            if(datas[i].childNodes.length > 0) {
+                assignId(datas[i].childNodes, type, datas[i].id);
+            }
+        }
+
+        return datas;
+    }
+
+    var count = 0;
+
+    function generateId(type) {
+        switch (type) {
+            case 0:
+                return "TREE1_NODE-" + count++;
+
+            case 1:
+                return "TREE2_NODE-" + count++;
+        }
+        return "NODE-" + count++;
+    }
+    var adjustedDatas1 = assignId(treeData1.data, 0);
+    count = 0;
+    var adjustedDatas2 = assignId(treeData2.data, 1);
+    //console.log();
+
+    window.addEventListener('load', function(){
+        document.getElementById('tree-with-search').component.setData(adjustedDatas1);
+        document.getElementById('tree-with-check').component.setData(adjustedDatas2);
+    });
+
+    var searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('input', function(e){
+        document.getElementById('tree-with-search').component.search(adjustedDatas1, this.value);
+    })
+
+</script>
+</body>
+</html>

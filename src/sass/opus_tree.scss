@@ -1,0 +1,288 @@
+@charset "UTF-8";
+@import "variable";
+
+* {
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  list-style: none;
+  display: block
+}
+
+.opl-tree {
+  overflow-y: scroll;
+  &.opl-tree--drag-mode {
+    & .opl-tree__node--dragged {
+      display: block;
+    }
+
+    & [class^='opl-tree__node__border'] {
+      position: absolute;
+      left: 0;
+      width:calc(100% - 80px);
+      display: inline-block;
+      height: 4px;
+      opacity: 0;
+      background-color: #aaa;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    & .opl-tree__node__border--bottom {
+      bottom: 0;
+    }
+    & .opl-tree__node__border--bottom:hover {
+      opacity: 0;
+    }
+
+    //& .opl-tree__node--expand > .opl-tree__node__border--bottom {
+    //  bottom: -2px;
+    //}
+
+    & .opl-tree__node__border--top {
+      top: 0;
+    }
+
+    & .opl-tree__node__border--top:hover {
+      opacity: 0;
+    }
+
+  }
+
+  &__node {
+    position: relative;
+    padding: 2px 0;
+    -webkit-transition: background-color .6s ease-in;
+    -moz-transition: background-color .6s ease-in;
+    -ms-transition: background-color .6s ease-in;
+    -o-transition: background-color .6s ease-in;
+    transition: background-color .6s ease-in;
+
+    &--active > .opl-tree__node__content > .opl-tree__node__name {
+      font-weight: bold;
+      color: $primary-color;
+    }
+
+    &__content {
+      width: calc(100% - 20px);
+      padding: 0 10px;
+      margin: 0 10px;
+      &:hover {
+        background-color: $black-alpha-10;
+      }
+    }
+
+    //&__child-nodes {
+    //  padding-left: 20px;
+    //}
+
+    &__child-nodes {
+      display: none;
+      will-change: height;
+    }
+
+    &__icon {
+      z-index: 100;
+      cursor: pointer;
+      border-top:4px solid transparent;
+      border-bottom:4px solid transparent;
+      border-right: none;
+      border-left: 4px solid $black-alpha-20;
+      //font-family: "opus-icon-font";
+      //font-style: normal;
+      //font-weight: normal;
+      //speak: none;
+      display: inline-block;
+      //text-decoration: inherit;
+      //width: 1em;
+      //text-align: center;
+      //font-variant: normal;
+      //text-transform: none;
+      //line-height: 1em;
+      //-webkit-font-smoothing: antialiased;
+      //-moz-osx-font-smoothing: grayscale;
+      //font-size: 16px;
+
+      &:before {
+        z-index: 100;
+        //content: '\e95b';
+      }
+      &.opl-tree__node__icon--hidden {
+        visibility: hidden;
+      }
+    }
+    &__check {
+      margin-left: 10px;
+    }
+
+    &__name {
+      display: inline-block;
+      z-index: 0;
+      padding: 5px 6px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 12px;
+      color: rgba(0, 0, 0, .8);
+      &--search-part {
+        color: $point-color;
+      }
+    }
+
+    &[data-tree-level='1'] {
+      & .opl-tree__node__name {
+        font-size: 14px;
+      }
+    }
+
+    &[data-tree-level='2'] {
+
+    }
+
+    &[data-tree-level='3'] {
+
+    }
+
+    &[data-tree-level='4'] {
+
+    }
+
+    &_check + .opl-tree__node__name {
+      padding: 5px 10px 5px 30px;
+      margin-left: -20px;
+    }
+
+    //&__name:hover {
+    //  background-color: rgba(0, 0, 0, 0.1);
+    //}
+
+    &--dragged {
+      //display: none;
+      content: 'aaa';
+      position: absolute;
+      left: 10px;
+      top: 10px;
+
+      & > .opl-tree__node--dragged__title {
+        cursor: pointer;
+        user-select: none;
+        color: $black-alpha-80;
+        padding: 5px 10px;
+        border-radius: 2px;
+        border: 2px solid rgba(242, 61, 61, 0.8);
+        background-color: rgba(242, 61, 61, 0.6);
+        font-size: 12px;
+      }
+      &.opl-tree__node--drop-possible span {
+        border-color: rgba(50, 166, 98, .8);
+        background-color: rgba(50, 166, 98, .6);
+      }
+      &__status {
+        position: absolute;
+        font-size: 14px;
+
+      }
+      &__status-icon {
+        font-family: opus-icon-font;
+        margin-left: 10px;
+        font-style: normal;
+        font-weight: normal;
+        speak: none;
+        display: inline-block;
+        text-decoration: inherit;
+        right: 10px;
+        text-align: center;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1em;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 20px;
+
+      }
+    }
+
+    &--expand {
+
+      & > .opl-tree__node__child-nodes {
+        display: block;
+      }
+      & > .opl-tree__node__content > .opl-tree__node__icon {
+        //content: '\e961';
+        transform: rotate(45deg) translate(2px, 0);
+        border-left: 4px solid  $primary-color-alpha-80;
+      }
+      & > .opl-tree__node__content > .opl-tree__node__name {
+        font-weight: bold;
+      }
+    }
+
+    &--collapse {
+
+      & > .opl-tree__node__child-nodes {
+        display: none;
+      }
+      & > .opl-tree__node__content > .opl-tree__node__icon {
+        //content: '\e95b';
+        transform: rotate(0deg);
+      }
+    }
+
+    &--expand-by-search {
+      display: block;
+      & > .opl-tree__node__child-nodes {
+        display: block !important;
+      }
+      &  > .opl-tree__node__content> .opl-tree__node__icon {
+        //content: '\e961' !important;
+        transform: rotate(45deg) translate(2px, 0);
+        border-left: 4px solid  $primary-color-alpha-80;
+      }
+      & > .opl-tree__node__content > .opl-tree__node__name {
+        font-weight: bold;
+      }
+    }
+
+    &--collapse-by-search {
+
+      & > .opl-tree__node__child-nodes {
+        display: none !important;
+      }
+      & > .opl-tree__node__content > .opl-tree__node__icon {
+        //content: '\e95b' !important;
+        transform: rotate(0deg);
+      }
+    }
+
+    &__node--hidden {
+      display: none;
+    }
+    //&--collapse {
+    //
+    //  & > ul {
+    //    display: none;
+    //  }
+    //}
+
+    &.opl-tree__node--hidden {
+      display: none;
+    }
+
+  }
+
+  &__root-node{
+    padding-left: 0;
+    display: block;
+    max-height: none;
+  }
+}

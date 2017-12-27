@@ -1,0 +1,83 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: 'opus-icon-font';
+  src: url('../icon/font/opus-icon-font.eot');
+  src: url('../icon/font/opus-icon-font.eot?#iefix') format('embedded-opentype'),
+  url('../icon/font/opus-icon-font.woff2') format('woff2'),
+  url('../icon/font/opus-icon-font.woff') format('woff'),
+  url('../icon/font/opus-icon-font.ttf') format('truetype'),
+  url('../icon/font/opus-icon-font.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Reset `button` and button-style `input` default styles */
+input[type="submit"], input[type="reset"], input[type="button"], button {
+  background: none;
+  margin: 0;
+  border: 0;
+  color: inherit; /* cursor: default; */
+  font: inherit;
+  line-height: normal;
+  overflow: visible;
+  padding: 0;
+  -webkit-appearance: button; /* for input */
+  -webkit-user-select: none; /* for button */
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+input::-moz-focus-inner, button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  font-weight: normal;
+  white-space: pre;
+  line-height: normal;
+  overflow: visible;
+  -webkit-appearance: button; /* for input */
+  -webkit-user-select: none; /* for button */
+  -moz-user-select: none;
+  -ms-user-select: none;
+  outline: none;
+}
+button:disabled {
+  cursor: not-allowed;
+
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  list-style: none;
+}
+
+.clearfix:after {
+  content: ' ';
+  display: block;
+  clear: both;
+}

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Title</title>
+    <link rel="stylesheet" href="./icon/css/opus-icon-font.css">
+    <link rel="stylesheet" href="./css/opus.min.css">
+    <script src="./js/opus.js"></script>
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+        }
+        body{
+            background: #eee;
+            position: relative;
+            min-width: 720px;
+            padding: 16px;
+        }
+
+        section {
+            position: relative;
+            border: 1px solid #eee;
+            height: 400px;
+            width: calc(50% - 32px);
+            margin: 16px;
+            padding: 20px 0;
+            float: left;
+            min-width: 360px;
+            vertical-align: middle;
+            background: white;
+            border-radius: 2px;
+            box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1);
+        }
+
+        section p {
+            display: table-cell;
+            height: 350px;
+            width: 10000px;
+            vertical-align: middle;
+            text-align: center;
+        }
+        section > .opl-fab-group{
+            display: inline-block;
+            position: absolute;
+            top: 80%;
+            transform: translate(-50%, -50%);
+            left: 50%;
+        }
+
+        /*#fab-1 {
+            position: fixed;
+            bottom: 50px;
+            right: 125px;
+        }
+
+        #fab-group-1 {
+            position: fixed;
+            bottom: 100px;
+            right: 100px;
+        }*/
+        h3 {
+            padding-bottom: 20px;
+            padding-left: 20px;
+            font-weight: bold;
+            text-align: start;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        h3 + div {
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate( -130px, -44px);
+        }
+
+        section .opl-segmented-button {
+            margin: 10px 0;
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrapper clearfix">
+    <section>
+        <h3>Normal Button - Icon</h3>
+        <p>
+            <button id="bt-1" class="opl-button opl-js-button opl-button--icon opl-button-normal" >
+                <i class="opus-ic-more-option-line-s"></i>
+            </button>
+            <button class="opl-button opl-js-button opl-button--icon opl-button-normal" disabled>
+                <i class="opus-ic-more-option-line-s"></i>
+            </button>
+        </p>
+    </section>
+
+    <section>
+        <h3>Normal Button - Mixed (text + icon)</h3>
+        <p>
+            <button id="bt-2" class="opl-button opl-js-button opl-button--mixed opl-button-normal" >
+                <i class="opus-ic-home-line-s"></i><span>HOME</span>
+            </button>
+            <button class="opl-button opl-js-button opl-button--mixed opl-button-normal" disabled>
+                <i class="opus-ic-home-line-s"></i><span>HOME</span>
+            </button>
+        </p>
+    </section>
+
+    <section>
+        <h3>Normal Button - Text (default)</h3>
+        <p>
+            <button class="opl-button opl-js-button opl-button-normal" >BUTTON</button>
+            <button class="opl-button opl-js-button opl-button-normal" disabled>BUTTON</button>
+        </p>
+    </section>
+
+    <section>
+        <h3>Normal Button - Text (borderless)</h3>
+        <p>
+            <button class="opl-button opl-js-button opl-button-normal opl-button--borderless" >BUTTON</button>
+            <button class="opl-button opl-js-button opl-button-normal opl-button--borderless" disabled>BUTTON</button>
+        </p>
+    </section>
+
+    <section>
+        <h3>Primary Button - Text (line)</h3>
+        <p>
+            <button class="opl-button opl-js-button opl-button-primary--line" >BUTTON</button>
+            <button class="opl-button opl-js-button opl-button-primary--line" disabled>BUTTON</button>
+        </p>
+    </section>
+
+    <section>
+        <h3>Primary Button - Text (borderless)</h3>
+        <p>
+            <button class="opl-button opl-js-button opl-button-primary--line opl-button--borderless" >BUTTON</button>
+            <button class="opl-button opl-js-button opl-button-primary--line opl-button--borderless" disabled>BUTTON</button>
+        </p>
+    </section>
+
+    <section>
+        <h3>Primary Button - Text (solid)</h3>
+        <p>
+            <button class="opl-button opl-js-button opl-button-primary--solid" >BUTTON</button>
+            <button class="opl-button opl-js-button opl-button-primary--solid" disabled>BUTTON</button>
+        </p>
+    </section>
+
+    <section>
+        <h3>Segment Button - Multi Select</h3>
+        <div>
+            <div class="opl-segmented-button opl-js-segmented-button opl-segmented-button--multi-select">
+                <button class="opl-button opl-segmented-button__item opl-segmented-button--active" value="0">IE</button>
+                <button class="opl-button opl-segmented-button__item opl-segmented-button--active" value="1">Firefox</button>
+                <button class="opl-button opl-segmented-button__item" value="2">Safari</button>
+                <button class="opl-button opl-segmented-button__item opl-segmented-button--active" value="3">Chrome</button>
+                <button class="opl-button opl-segmented-button__item opl-segmented-button--active" value="4">Opera</button>
+            </div>
+
+            <div class="opl-segmented-button opl-js-segmented-button opl-segmented-button--multi-select" disabled="true">
+                <button class="opl-button opl-segmented-button__item opl-segmented-button--active" value="0">IE</button>
+                <button class="opl-button opl-segmented-button__item opl-segmented-button--active" value="1">Firefox</button>
+                <button class="opl-button opl-segmented-button__item" value="2">Safari</button>
+                <button class="opl-button opl-segmented-button__item opl-segmented-button--active" value="3">Chrome</button>
+                <button class="opl-button opl-segmented-button__item" value="4">Opera</button>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h3>Segment Button - Single Select</h3>
+        <div>
+            <div class="opl-segmented-button opl-js-segmented-button">
+                <button class="opl-button opl-segmented-button__item" value="0">IE</button>
+                <button class="opl-button opl-segmented-button__item opl-segmented-button--active" value="1">Firefox</button>
+                <button class="opl-button opl-segmented-button__item" value="2">Safari</button>
+                <button class="opl-button opl-segmented-button__item" value="3">Chrome</button>
+                <button class="opl-button opl-segmented-button__item" value="4">Opera</button>
+            </div>
+            <div class="opl-segmented-button opl-js-segmented-button" disabled="true">
+                <button class="opl-button opl-segmented-button__item" value="0">IE</button>
+                <button class="opl-button opl-segmented-button__item opl-segmented-button--active" value="1">Firefox</button>
+                <button class="opl-button opl-segmented-button__item" value="2">Safari</button>
+                <button class="opl-button opl-segmented-button__item" value="3">Chrome</button>
+                <button class="opl-button opl-segmented-button__item" value="4">Opera</button>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h3>Floating Button</h3>
+        <p>
+        <button id="fab-1" class="opl-button opl-js-button opl-floating-button" >
+            <i class="opus-ic-add-pictogram-l"></i>
+        </button>
+        </p>
+    </section>
+    <section>
+        <h3>Floating Button Group</h3>
+        <div id="fab-group-1" class="opl-fab-group opl-js-fab-group">
+            <button class="opl-button opl-js-button opl-floating-button opl-fab-group__main-button opl-fab-group__expand-button" >
+                <i class="opus-ic-add-pictogram-l"></i>
+            </button>
+            <div class="opl-fab-group__sub-button-group">
+                <button class="opl-button opl-js-button opl-floating-button opl-fab-group__sub-button" data-fab-order="1">
+                    <i class="opus-ic-messenger-line-m"></i>
+                </button>
+                <button class="opl-button opl-js-button opl-floating-button opl-fab-group__sub-button" data-fab-order="2" >
+                    <i class="opus-ic-write-pictogram-m"></i>
+                </button>
+                <button class="opl-button opl-js-button opl-floating-button opl-fab-group__sub-button" data-fab-order="3" >
+                    <i class="opus-ic-notice-line-m"></i>
+                </button>
+            </div>
+        </div>
+
+    </section>
+</div>
+<script>
+
+</script>
+
+</body>
+</html>
