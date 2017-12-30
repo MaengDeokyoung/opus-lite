@@ -18,44 +18,33 @@ li {
   display: block
 }
 
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}
+
 .opl-tree {
   overflow-y: scroll;
-  &.opl-tree--drag-mode {
-    & .opl-tree__node--dragged {
-      display: block;
-    }
-
-    & [class^='opl-tree__node__border'] {
-      position: absolute;
-      left: 0;
-      width:calc(100% - 80px);
-      display: inline-block;
-      height: 4px;
-      opacity: 0;
-      transition: height 0.3s ease-out;
-
-      &:hover {
-        opacity: 1;
-      }
-    }
-
-    & .opl-tree__node__border--bottom {
-      bottom: 0;
-    }
-
-    & .opl-tree__node__border--top {
-      top: 0;
-    }
-  }
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  padding-bottom: 6px;
 
   &__node {
-    position: relative;
+    transition: padding 0.2s linear;
     padding: 2px 0;
-    -webkit-transition: background-color .6s ease-in;
-    -moz-transition: background-color .6s ease-in;
-    -ms-transition: background-color .6s ease-in;
-    -o-transition: background-color .6s ease-in;
-    transition: background-color .6s ease-in;
+    position: relative;
+    //user-select: none;
+    //-webkit-user-select: none;
+    //-ms-user-select: none;
+    //-moz-user-select: none;
+
+    &__border--top {
+      display: none;
+    }
 
     &--active > .opl-tree__node__content > .opl-tree__node__name {
       font-weight: bold;
@@ -66,6 +55,15 @@ li {
       width: calc(100% - 20px);
       padding: 0 10px;
       margin: 0 10px;
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      -moz-user-select: none;
+      -webkit-transition: background-color .2s ease-in;
+      -moz-transition: background-color .2s ease-in;
+      -ms-transition: background-color .2s ease-in;
+      -o-transition: background-color .2s ease-in;
+      transition: background-color .2s ease-in;
       &:hover {
         background-color: $black-alpha-10;
       }
@@ -78,6 +76,10 @@ li {
     &__child-nodes {
       display: none;
       will-change: height;
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      -moz-user-select: none;
     }
 
     &__icon {
@@ -88,6 +90,11 @@ li {
       border-right: none;
       border-left: 4px solid $black-alpha-20;
       transition: all 0.1s ease-out;
+      user-select: none;
+      margin-right: 3px;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      -moz-user-select: none;
       //font-family: "opus-icon-font";
       //font-style: normal;
       //font-weight: normal;
@@ -118,9 +125,13 @@ li {
     &__name {
       display: inline-block;
       z-index: 0;
-      padding: 5px 6px;
+      padding: 3px 3px;
+      margin: 3px 0;
       cursor: pointer;
       user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      -moz-user-select: none;
       font-size: 12px;
       color: rgba(0, 0, 0, .8);
       &--search-part {
@@ -162,46 +173,56 @@ li {
       left: 10px;
       top: 10px;
       color: $black-alpha-80;
-      pointer-events:none;
+      cursor: move;
 
       & > .opl-tree__node--dragged__title {
-        cursor: pointer;
         user-select: none;
-        color: $black-alpha-80;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        -moz-user-select: none;
+        opacity: .5;
         padding: 5px 10px;
         border-radius: 2px;
         border: 2px solid rgba(242, 61, 61, 0.8);
-        background-color: rgba(242, 61, 61, 1);
+        background-color: rgba(242, 61, 61, 0.6);
         color: white;
         font-size: 14px;
       }
       &.opl-tree__node--drop-possible > .opl-tree__node--dragged__title {
         border-color: rgba(50, 166, 98, .8);
-        background-color: rgba(50, 166, 98, 1);
+        background-color: rgba(50, 166, 98, .6);
+      }
+      &.opl-tree__node--drop-possible .opl-tree__node--dragged__status-icon {
+        color: rgba(0, 0, 0, 0.8);
       }
       &__status:before {
         content:' ';
         position: absolute;
         width:15px;
-        height:2px;
-        background-color: rgba(0, 0, 0, 0.5);
-        top: calc(50% - 1px);
-        left: -17px;
+        height:19px;
+        border-bottom-left-radius: 15px;
+        border-left: 2px solid rgba(0, 0, 0, 0.5);
+        border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+        top: -6px;
+        left: -19px;
       }
       &__status {
+
         position: relative;
-        margin-left: 15px;
-        display: inline-block;
+        margin-left: 50px;
+        display: block;
+        margin-top: 10px;
         font-size: 12px;
         background-color: white;
         line-height: 16px;
         padding: 5px 15px;
         border-radius: 18px;
+        color: rgba(0, 0, 0, 0.8);
         border: 2px solid rgba(0, 0, 0, 0.5);
       }
       &__status-icon {
+        margin-right: 5px;
         font-family: opus-icon-font;
-        margin-left: 10px;
         line-height: 16px;
         font-style: normal;
         font-weight: normal;
@@ -212,9 +233,10 @@ li {
         text-align: center;
         font-variant: normal;
         text-transform: none;
+        color: rgba(242, 61, 61, 1);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        font-size: 16px;
+        font-size: 12px;
 
       }
     }
@@ -291,5 +313,80 @@ li {
     padding-left: 0;
     display: block;
     max-height: none;
+  }
+
+  &.opl-tree--drag-mode {
+    //& .opl-tree__node {
+    //  padding: 2px 0;
+    //}
+    & .opl-tree__node--dragged {
+      display: block;
+    }
+
+    [class^='opl-tree__node__border'] {
+      position: absolute;
+      left: 0;
+      width: 300px;
+      height: 10px;
+      z-index: 100;
+      cursor: move;
+
+      &.hover {
+        &:before {
+          visibility: visible;
+          opacity: 1;
+        }
+        &:after {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+
+      &:before {
+        content: ' ';
+        width: 6px;
+        height: 6px;
+        border-radius: 6px;
+        border: 2px solid $primary-color;
+        position: absolute;
+        left: -9px;
+        visibility: hidden;
+      }
+      &:after {
+        content: ' ';
+        position: absolute;
+        left: 0;
+        top: 3px;
+        width: 300px;
+        display: inline-block;
+        height: 4px;
+        background-color: $primary-color;
+        visibility: hidden;
+      }
+    }
+
+    & .opl-tree__node__border--bottom {
+      display: inline-block;
+      bottom: -5px;
+    }
+
+    & .opl-tree__node:first-child > .opl-tree__node__border--top {
+      display: inline-block;
+      top: -3px;
+    }
+
+    & .opl-tree__node__content.hover {
+      background-color: transparent;
+    }
+
+    & .opl-tree__node__name.hover {
+      background-color: $primary-color-alpha-80;
+      color: white;
+      border-radius: 3px;
+    }
+
+    & .opl-tree__node__content:hover {
+      background-color: transparent;
+    }
   }
 }

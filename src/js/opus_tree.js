@@ -44,7 +44,10 @@
     OpusTree.prototype.constructor = OpusTree;
 
     OpusTree.prototype.Constant_ = {
-        PARENT_ID_NOT_ASSIGNED: 'N/A'
+        PARENT_ID_NOT_ASSIGNED: 'N/A',
+        TEXT_BEFORE: 'Before ',
+        TEXT_AFTER: 'After ',
+        TEXT_INSIDE: 'Inside ',
     };
 
     OpusTree.prototype.CssClasses_ = {
@@ -64,6 +67,88 @@
         TREE_NODE_HIDDEN: 'opl-tree__node--hidden',
         TREE_NODE_EXPAND_BY_SEARCH: 'opl-tree__node--expand-by-search',
         TREE_NODE_COLLAPSE_BY_SEARCH: 'opl-tree__node--collapse-by-search'
+    };
+
+    var fadeIn = function() {
+        var s = this.style;
+        if (parseFloat(s.opacity) + 0.1 > 1){
+            s.opacity = '1';
+        } else {
+            s.opacity = parseFloat(s.opacity) + 0.1;
+            setTimeout(fadeIn.bind(this), 10);
+        }
+    };
+
+    var fadeOut = function() {
+        var s = this.style;
+        if (parseFloat(s.opacity) - 0.1 < 0){
+            s.opacity = '0';
+        } else {
+            s.opacity = parseFloat(s.opacity) - 0.1;
+            setTimeout(fadeOut.bind(this), 10);
+        }
+    };
+
+    var translateX = function(fromX, toX) {
+        var dx;
+        var adjustedFromX = fromX;
+
+        dx = (toX - fromX) / 20;
+
+        var s = this.style;
+
+        (function animate(){
+            if (dx > 0) {
+                if (adjustedFromX + dx > toX){
+                    s.transform = '';
+                } else {
+                    adjustedFromX = adjustedFromX + dx;
+                    s.transform = 'translate('+ adjustedFromX + 'px, 0)';
+                    setTimeout(animate, 10);
+                }
+            }
+
+            if (dx < 0) {
+                if (adjustedFromX + dx < toX){
+                    s.transform = '';
+                } else {
+                    adjustedFromX = adjustedFromX + dx;
+                    s.transform = 'translate('+ adjustedFromX +'px, 0)';
+                    setTimeout(animate, 10);
+                }
+            }
+        })();
+    };
+
+    var translateY = function(fromY, toY) {
+        var dy;
+        var adjustedFromY = fromY;
+
+        dy = (toY - fromY) / 20;
+
+        var s = this.style;
+
+        (function animate(){
+            if (dy > 0) {
+                if (adjustedFromY + dy > toY){
+                    s.transform = '';
+                } else {
+                    adjustedFromY = adjustedFromY + dy;
+                    s.transform = 'translate(0, ' + adjustedFromY + 'px)';
+                    setTimeout(animate, 10);
+                }
+            }
+
+            if (dy < 0) {
+                if (adjustedFromY + dy < toY){
+                    s.transform = '';
+                } else {
+                    adjustedFromY = adjustedFromY + dy;
+                    s.transform = 'translate(0, ' + adjustedFromY + 'px)';
+                    setTimeout(animate, 10);
+                }
+            }
+        })();
     };
 
     OpusTree.prototype.setData = function (data) {
@@ -216,7 +301,7 @@
                 if (this.element_.hasCheck){
                     checkEl = checkEls[i];
                     var checkbox = checkEls[i].childNodes[0];
-                    this.addDefaultEventListener(checkbox, 'change', function () {
+                    this.addDefaultEventListener(checkbox, 'change', function (e) {
                         that.checkItem(this);
                     });
                 }
@@ -227,8 +312,8 @@
                 }
 
                 iconEl.style.marginLeft = ((parseInt(nodeEls[i].dataset.treeLevel) - 1) * 10) +'px';
-                borderBottomEls[i].style.left = (parseInt(borderBottomEls[i].parentNode.dataset.treeLevel - 1) * 10 + 20) +'px';
-                borderTopEls[i].style.left = (parseInt(borderBottomEls[i].parentNode.dataset.treeLevel - 1) * 10 + 20) +'px';
+                borderBottomEls[i].style.left = ((parseInt(borderBottomEls[i].parentNode.dataset.treeLevel) - 1) * 10 + 30) +'px';
+                borderTopEls[i].style.left = ((parseInt(borderBottomEls[i].parentNode.dataset.treeLevel) - 1) * 10 + 30) +'px';
             }
         }
     };
@@ -239,8 +324,8 @@
             draggedElement.classList.add('opl-tree__node--dragged');
             draggedElement.innerHTML = '<span class="opl-tree__node--dragged__title">OPUS</span>' +
                 '<div class="opl-tree__node--dragged__status">' +
-                '<span class="opl-tree__node--dragged__target">OPUS</span>' +
                 '<i class="opl-tree__node--dragged__status-icon">&#xeb2a;</i>' +
+                '<span class="opl-tree__node--dragged__target">OPUS</span>' +
                 '</div>';
 
             this.element_.appendChild(draggedElement);
@@ -253,7 +338,7 @@
         if (nodeEl.querySelector('.' + this.CssClasses_.TREE_NODE_CHILD_NODES).childNodes.length === 0) {
             iconEl.classList.add(that.CssClasses_.TREE_NODE_ICON_HIDDEN);
         }
-        this.addDefaultEventListener(contentEl, 'click', function () {
+        this.addDefaultEventListener(contentEl, 'click', function (e) {
             var nodeEl = this.parentNode;
             if (!nodeEl.querySelector('.' + that.CssClasses_.TREE_NODE_ICON).classList.contains(that.CssClasses_.TREE_NODE_ICON_HIDDEN)) {
                 that.toggleTreeChildNodes.bind(that)(nodeEl);
@@ -298,12 +383,22 @@
             if (isMouseDown){
                 var targetNameEl = draggedElement.querySelector('.opl-tree__node--dragged__target');
 
+                var changeStatus = function(targetNode, iconCode, prefixText){
+                    var targetName = targetNode.querySelector('.' + that.CssClasses_.TREE_NODE_NAME).innerHTML;
+                    draggedElement.querySelector('.opl-tree__node--dragged__status-icon').innerHTML = iconCode;
+                    if(targetName !== selectedNodeName) {
+                        targetNameEl.innerHTML = prefixText + '<span style="font-weight:bold;">' + targetName + '</span>';
+                    }
+                };
+
                 if (event.target.classList.contains(that.CssClasses_.TREE_NODE_BORDER_TOP)) {
                     targetNode = event.target.parentNode;
-                    draggedElement.querySelector('.opl-tree__node--dragged__status-icon').innerHTML = '&#xeb27;';
+                    changeStatus(targetNode, '&#xeb27;', that.Constant_.TEXT_BEFORE);
+
                 } else if (event.target.classList.contains(that.CssClasses_.TREE_NODE_BORDER_BOTTOM)) {
                     targetNode = event.target.parentNode;
-                    draggedElement.querySelector('.opl-tree__node--dragged__status-icon').innerHTML = '&#xeb2d;';
+                    changeStatus(targetNode, '&#xeb2d;', that.Constant_.TEXT_AFTER);
+
                 } else {
                     if (event.target.classList.contains(that.CssClasses_.TREE_NODE_ICON)) {
                         targetNode = event.target.parentNode.parentNode;
@@ -312,11 +407,7 @@
                     } else {
                         targetNode = event.target.parentNode;
                     }
-                    draggedElement.querySelector('.opl-tree__node--dragged__status-icon').innerHTML = '&#xeb39;';
-                }
-                var targetName = targetNode.querySelector('.' + that.CssClasses_.TREE_NODE_NAME).innerHTML;
-                if(targetName !== selectedNodeName) {
-                    targetNameEl.innerHTML = targetName;
+                    changeStatus(targetNode, '&#xeb39;', that.Constant_.TEXT_INSIDE);
                 }
 
                 if (draggedElement) {
@@ -324,17 +415,45 @@
                     if (that.isChild(selectedNodeEl, targetNode)) {
                         draggedElement.classList.remove('opl-tree__node--drop-possible');
                         draggedElement.querySelector('.opl-tree__node--dragged__status-icon').innerHTML = '&#xebc3;';
-                        targetNameEl.innerHTML = '<span style="color:rgba(242, 61, 61, 1);">Not Available</span>';
+                        targetNameEl.innerHTML = '<span style="color:rgba(242,61,61,1);">Not Available</span>';
                     } else {
                         draggedElement.classList.add('opl-tree__node--drop-possible');
                     }
                 }
+                console.log(event.target);
             }
+
+        };
+
+        var animateAdd = function(selectedNodeEl) {
+
+            var heightAnimDur = 200;
+            var fadeAnimDur = 200;
+
+            var targetHeight = parseInt(window.getComputedStyle(selectedNodeEl).height);
+            selectedNodeEl.style.height = 0;
+            selectedNodeEl.style.opacity = 0;
+
+            setTimeout(function(){
+                selectedNodeEl.style.transition = 'all ' + (heightAnimDur / 1000) +'s ease-out';
+                selectedNodeEl.style.height = targetHeight +'px';
+                setTimeout(function() {
+                    selectedNodeEl.style.transition = '';
+                    selectedNodeEl.style.height = '';
+                    fadeIn.bind(selectedNodeEl)();
+                }, heightAnimDur);
+            }, 0);
+
+            // var selectedContentEl = selectedNodeEl.querySelector('.' + that.CssClasses_.TREE_NODE_CONTENT);
+            // selectedContentEl.style.backgroundColor = 'rgba(0, 0, 0, .3)';
+            // setTimeout(function(){
+            //     this.style.backgroundColor = '';
+            // }.bind(selectedContentEl), 500);
         };
 
         this.addDefaultEventListener(borderBottomEl, 'mouseover', mouseOverEvent, false);
         this.addDefaultEventListener(borderTopEl, 'mouseover', mouseOverEvent, false);
-        this.addDefaultEventListener(contentEl, 'mouseover', mouseOverEvent, false);
+        this.addDefaultEventListener(nameEl, 'mouseover', mouseOverEvent, false);
 
         this.addDefaultEventListener(borderBottomEl, 'mouseup', function(event) {
             if (isMouseDown && isDragged && !that.isChild(selectedNodeEl, targetNode)) {
@@ -350,6 +469,7 @@
                 }
                 insertAfter(selectedNodeEl, targetNode);
                 that.setLevel(selectedNodeEl, parseInt(targetNode.dataset.treeLevel));
+                animateAdd(selectedNodeEl);
                 that.element_.treeData = that.getTreeDataFromNodes();
                 //selectedNodeEl.setAttribute('data-tree-level', '' + targetNode.dataset.targetLevel);
             }
@@ -369,11 +489,13 @@
                 }
                 insertBefore(selectedNodeEl, targetNode);
                 that.setLevel(selectedNodeEl, parseInt(targetNode.dataset.treeLevel));
+                animateAdd(selectedNodeEl);
+
                 that.element_.treeData = that.getTreeDataFromNodes();
                 //selectedNodeEl.setAttribute('data-tree-level', '' + targetNode.dataset.targetLevel);
             }
         });
-        this.addDefaultEventListener(contentEl, 'mouseup', function(event) {
+        this.addDefaultEventListener(nameEl, 'mouseup', function(event) {
             if (isMouseDown && isDragged && !that.isChild(selectedNodeEl, targetNode)) {
                 selectedNodeParentUl.removeChild(selectedNodeEl);
                 if (selectedNodeParentUl.childNodes.length < 1){
@@ -388,16 +510,18 @@
                 if (targetNode.classList.contains(that.CssClasses_.TREE_NODE_COLLAPSE)) {
                     targetNode.classList.remove(that.CssClasses_.TREE_NODE_COLLAPSE);
                     targetNode.classList.add(that.CssClasses_.TREE_NODE_EXPAND);
+                    targetNode.querySelector('ul').style.opacity = '1'
+
                 }
                 var treeNodeIconEl = targetNode.querySelector('.' + that.CssClasses_.TREE_NODE_ICON);
                 if (targetNode.querySelector('.' + that.CssClasses_.TREE_NODE_ICON).classList.contains(that.CssClasses_.TREE_NODE_ICON_HIDDEN)) {
                     treeNodeIconEl.classList.remove(that.CssClasses_.TREE_NODE_ICON_HIDDEN);
                 }
-                that.setLevel(selectedNodeEl, parseInt(targetNode.dataset.treeLevel) + 1);
-                selectedNodeEl.style.backgroundColor = 'rgba(0, 0, 0, .3)';
-                setTimeout(function(){
-                    this.style.backgroundColor = '';
-                }.bind(selectedNodeEl), 500);
+                console.log(parseInt(targetNode.dataset.treeLevel) + 1);
+                setTimeout(function() {
+                    that.setLevel(selectedNodeEl, parseInt(targetNode.dataset.treeLevel) + 1);
+                }, 0);
+                animateAdd(selectedNodeEl);
                 that.element_.treeData = that.getTreeDataFromNodes();
             }
         });
@@ -408,18 +532,21 @@
                     isDragged = true;
                     that.element_.classList.add('opl-tree--drag-mode');
                     draggedElement.querySelector('.opl-tree__node--dragged__title').innerHTML = selectedNodeName;
-                    draggedElement.style.transform = 'translate(' + (event.clientX + window.scrollX - 50) + 'px ,' + (event.clientY + window.scrollY - 20) +'px )';
+                    draggedElement.style.transform = 'translate(' + (event.clientX + document.documentElement.scrollLeft) + 'px ,' +
+                        (event.clientY + document.documentElement.scrollTop - 20) +'px) translateZ(0)';
+                    draggedElement.style.msTransform = 'translate(' + (event.clientX + document.documentElement.scrollLeft) + 'px ,' +
+                        (event.clientY + document.documentElement.scrollTop - 20) +'px) translateZ(0)';
                 }
             }
         });
 
         window.addEventListener('mouseover', function(event) {
-            console.log(event.target);
+            //console.log(event.target);
             if(!event.target.classList.contains(that.CssClasses_.TREE_NODE_NAME) &&
-                !event.target.classList.contains(that.CssClasses_.TREE_NODE_ICON) &&
+                /*!event.target.classList.contains(that.CssClasses_.TREE_NODE_ICON) &&*/
                 !event.target.classList.contains(that.CssClasses_.TREE_NODE_BORDER_BOTTOM) &&
-                !event.target.classList.contains(that.CssClasses_.TREE_NODE_BORDER_TOP) &&
-                !event.target.classList.contains(that.CssClasses_.TREE_NODE_CONTENT)) {
+                !event.target.classList.contains(that.CssClasses_.TREE_NODE_BORDER_TOP)/* &&
+                !event.target.classList.contains(that.CssClasses_.TREE_NODE_CONTENT)*/) {
                 var targetNameEl = draggedElement.querySelector('.opl-tree__node--dragged__target');
                 draggedElement.classList.remove('opl-tree__node--drop-possible');
                 draggedElement.querySelector('.opl-tree__node--dragged__status-icon').innerHTML = '&#xebc3;';
@@ -431,9 +558,9 @@
             that.element_.classList.remove('opl-tree--drag-mode');
             isMouseDown = false;
             isDragged = false;
-            targetNode = null;
-            selectedNodeParentUl = null;
-            selectedNodeEl = null;
+            // targetNode = null;
+            // selectedNodeParentUl = null;
+            // selectedNodeEl = null;
             event.stopPropagation();
         });
     };
@@ -495,101 +622,28 @@
     };
 
     OpusTree.prototype.setLevel = function (node, level){
+
         node.setAttribute('data-tree-level', level);
-        node.querySelector('.' + this.CssClasses_.TREE_NODE_ICON).style.marginLeft = ((parseInt(node.dataset.treeLevel)- 1) * 10) +'px';
-        node.querySelector('.' + this.CssClasses_.TREE_NODE_BORDER_BOTTOM).style.left = (parseInt(node.dataset.treeLevel - 1) * 10 + 20) +'px';
-        node.querySelector('.' + this.CssClasses_.TREE_NODE_BORDER_TOP).style.left = (parseInt(node.dataset.treeLevel - 1) * 10 + 20) +'px';
-        //node.querySelector('.' + this.CssClasses_.TREE_NODE_BORDER_BOTTOM).style.left = (parseInt(node.dataset.treeLevel) * 20) +'px';
 
+        var iconEl = node.querySelector('.' + this.CssClasses_.TREE_NODE_ICON);
+        var borderBottomEl = node.childNodes[2];
+        var borderTopEl = node.childNodes[3];
         var childNodes = node.querySelector('.' + this.CssClasses_.TREE_NODE_CHILD_NODES).childNodes;
+
+        iconEl.style.marginLeft = ((level - 1) * 10) + 'px';
+        borderBottomEl.style.left = ((level - 1) * 10 + 30) + 'px';
+        borderTopEl.style.left = ((level - 1) * 10 + 30) + 'px';
+
+        //node.querySelector('.' + this.CssClasses_.TREE_NODE_BORDER_BOTTOM).style.left = (parseInt(node.dataset.treeLevel - 1) * 10 ) +'px';
+        var childLevel = level + 1;
+
         if (childNodes.length > 0){
-            var childLevel = level + 1;
             for (var i = 0 ; i < childNodes.length ; i++) {
-                this.setLevel(childNodes[i], childLevel);
+                (function(i, childLevel){
+                    this.setLevel(childNodes[i], childLevel);
+                }.bind(this))(i, childLevel);
             }
         }
-    };
-
-    var fadeIn = function() {
-        var s = this.style;
-        if (parseFloat(s.opacity) + 0.1 > 1){
-            s.opacity = '1';
-        } else {
-            s.opacity = parseFloat(s.opacity) + 0.1;
-            setTimeout(fadeIn.bind(this), 10);
-        }
-    };
-
-    var fadeOut = function() {
-        var s = this.style;
-        if (parseFloat(s.opacity) - 0.1 < 0){
-            s.opacity = '0';
-        } else {
-            s.opacity = parseFloat(s.opacity) - 0.1;
-            setTimeout(fadeOut.bind(this), 10);
-        }
-    };
-
-    var translateX = function(fromX, toX) {
-        var dx;
-        var adjustedFromX = fromX;
-
-        dx = (toX - fromX) / 20;
-
-        var s = this.style;
-
-        (function animate(){
-            if (dx > 0) {
-                if (adjustedFromX + dx > toX){
-                    s.transform = '';
-                } else {
-                    adjustedFromX = adjustedFromX + dx;
-                    s.transform = 'translate('+ adjustedFromX + 'px, 0)';
-                    setTimeout(animate, 10);
-                }
-            }
-
-            if (dx < 0) {
-                if (adjustedFromX + dx < toX){
-                    s.transform = '';
-                } else {
-                    adjustedFromX = adjustedFromX + dx;
-                    s.transform = 'translate('+ adjustedFromX +'px, 0)';
-                    setTimeout(animate, 10);
-                }
-            }
-        })();
-    };
-
-    var translateY = function(fromY, toY) {
-        var dy;
-        var adjustedFromY = fromY;
-
-        dy = (toY - fromY) / 20;
-
-        var s = this.style;
-
-        (function animate(){
-            if (dy > 0) {
-                if (adjustedFromY + dy > toY){
-                    s.transform = '';
-                } else {
-                    adjustedFromY = adjustedFromY + dy;
-                    s.transform = 'translate(0, ' + adjustedFromY + 'px)';
-                    setTimeout(animate, 10);
-                }
-            }
-
-            if (dy < 0) {
-                if (adjustedFromY + dy < toY){
-                    s.transform = '';
-                } else {
-                    adjustedFromY = adjustedFromY + dy;
-                    s.transform = 'translate(0, ' + adjustedFromY + 'px)';
-                    setTimeout(animate, 10);
-                }
-            }
-        })();
     };
 
     OpusTree.prototype.toggleTreeChildNodes = function (treeNode) {
@@ -796,5 +850,8 @@
         cssClass: 'opl-js-tree',
         widget: true
     });
+
+    document.onmouseover = function(e) { e.target.classList.add('hover'); };
+    document.onmouseout = function(e) { e.target.classList.remove('hover'); };
 
 })();
