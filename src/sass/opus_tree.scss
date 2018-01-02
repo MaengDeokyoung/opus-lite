@@ -26,16 +26,15 @@ body {
 }
 
 .opl-tree {
-  overflow-y: scroll;
   user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
   -moz-user-select: none;
-  padding-bottom: 6px;
-
+  padding: 6px 0;
   &__node {
     transition: padding 0.2s linear;
     padding: 2px 0;
+    width: auto;
     position: relative;
     //user-select: none;
     //-webkit-user-select: none;
@@ -124,8 +123,9 @@ body {
 
     &__name {
       display: inline-block;
+      border: 2px solid transparent;
       z-index: 0;
-      padding: 3px 3px;
+      padding: 1px 3px;
       margin: 3px 0;
       cursor: pointer;
       user-select: none;
@@ -188,13 +188,17 @@ body {
         color: white;
         font-size: 14px;
       }
-      &.opl-tree__node--drop-possible > .opl-tree__node--dragged__title {
-        border-color: rgba(50, 166, 98, .8);
-        background-color: rgba(50, 166, 98, .6);
+      &.opl-tree__node--drop-possible {
+        & > .opl-tree__node--dragged__title {
+          border-color: rgba(50, 166, 98, .8);
+          background-color: rgba(50, 166, 98, .6);
+        }
+
+        & .opl-tree__node--dragged__status-icon {
+          color: rgba(0, 0, 0, 0.8);
+        }
       }
-      &.opl-tree__node--drop-possible .opl-tree__node--dragged__status-icon {
-        color: rgba(0, 0, 0, 0.8);
-      }
+
       &__status:before {
         content:' ';
         position: absolute;
@@ -382,6 +386,13 @@ body {
     & .opl-tree__node__name.hover {
       background-color: $primary-color-alpha-80;
       color: white;
+      border-radius: 3px;
+    }
+
+    & .opl-tree__node__name.opl-tree__node--target-parent {
+      box-sizing: border-box;
+      border: 2px solid $primary-color-alpha-80;
+      color: $primary-color-alpha-80;
       border-radius: 3px;
     }
 
