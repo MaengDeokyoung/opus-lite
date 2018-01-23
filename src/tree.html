@@ -12,19 +12,20 @@
     <script src="./js/opus_tree.js"></script>
     <script src="./js/opus_check_box.js"></script>
     <style>
-
+        #content {
+            width: 30%;
+            overflow: auto;
+            border-right: 3px solid #ccc;
+        }
+        #content::after {
+            content: ' ';
+        }
     </style>
 </head>
 <body>
-
 <input id="search-input" type="text"/>
-<div id="tree-with-search" class="opl-tree opl-js-tree opl-tree--has-check"></div>
-<br>
-<br>
 <div id="content">
-    <div>
-        <div id="tree-with-check"  class="opl-tree opl-js-tree opl-tree--draggable"></div>
-    </div>
+    <div id="tree-with-check" class="opl-tree opl-js-tree opl-tree--has-check opl-tree--draggable"></div>
 </div>
 <br>
 <div id="tree-data"></div>
@@ -425,13 +426,13 @@
     //console.log();
 
     window.addEventListener('load', function(){
-        document.getElementById('tree-with-search').component.setData(adjustedDatas1);
+        //document.getElementById('tree-with-search').component.setData(adjustedDatas1);
         document.getElementById('tree-with-check').component.setData(adjustedDatas2);
     });
 
     var searchInput = document.getElementById('search-input');
     searchInput.addEventListener('input', function(e){
-        document.getElementById('tree-with-search').component.search(adjustedDatas1, this.value);
+        document.getElementById('tree-with-check').component.search(adjustedDatas1, this.value);
     })
 
 </script>

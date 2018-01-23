@@ -53,15 +53,34 @@
   &-normal {
     color: rgba(0, 0, 0, 0.8);
     border: 1px solid rgba(0, 0, 0, 0.2);
+    position: relative;
 
-    &:hover {
+/*    &:hover {
       background-color: rgba(0, 0, 0, 0.1);
+    }*/
+
+    &:after {
+      position: absolute;
+      content: "";
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 1);
+      opacity: 0;
+    }
+    &:hover:after {
+      opacity: 0.1;
     }
 
     &:disabled {
       color: rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(0, 0, 0, 0.1);
       background-color: transparent;
+    }
+
+    &:disabled:after {
+      opacity: 0;
     }
   }
 

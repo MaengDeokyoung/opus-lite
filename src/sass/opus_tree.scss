@@ -34,7 +34,6 @@ body {
   &__node {
     transition: padding 0.2s linear;
     padding: 2px 0;
-    width: auto;
     position: relative;
     //user-select: none;
     //-webkit-user-select: none;
@@ -51,6 +50,7 @@ body {
     }
 
     &__content {
+      white-space: nowrap;
       width: calc(100% - 20px);
       padding: 0 10px;
       margin: 0 10px;
@@ -63,9 +63,6 @@ body {
       -ms-transition: background-color .2s ease-in;
       -o-transition: background-color .2s ease-in;
       transition: background-color .2s ease-in;
-      &:hover {
-        background-color: $black-alpha-10;
-      }
     }
 
     //&__child-nodes {
@@ -118,7 +115,7 @@ body {
       }
     }
     &__check {
-      margin-left: 10px;
+      margin: 0 10px;
     }
 
     &__name {
@@ -136,6 +133,9 @@ body {
       color: rgba(0, 0, 0, .8);
       &--search-part {
         color: $point-color;
+      }
+      &:hover {
+        background-color: $black-alpha-10;
       }
     }
 
@@ -168,7 +168,6 @@ body {
 
     &--dragged {
       display: none;
-      content: 'aaa';
       position: absolute;
       left: 10px;
       top: 10px;
@@ -181,17 +180,15 @@ body {
         -ms-user-select: none;
         -moz-user-select: none;
         opacity: .5;
-        padding: 5px 10px;
+        padding: 2px 5px;
         border-radius: 2px;
-        border: 2px solid rgba(242, 61, 61, 0.8);
-        background-color: rgba(242, 61, 61, 0.6);
-        color: white;
+        //border: 2px solid rgba(242, 61, 61, 0.8);
+        color: rgba(0,0,0,.8);
         font-size: 14px;
       }
       &.opl-tree__node--drop-possible {
         & > .opl-tree__node--dragged__title {
-          border-color: rgba(50, 166, 98, .8);
-          background-color: rgba(50, 166, 98, .6);
+          //border-color: rgba(50, 166, 98, .8);
         }
 
         & .opl-tree__node--dragged__status-icon {
@@ -199,23 +196,23 @@ body {
         }
       }
 
-      &__status:before {
-        content:' ';
-        position: absolute;
-        width:15px;
-        height:19px;
-        border-bottom-left-radius: 15px;
-        border-left: 2px solid rgba(0, 0, 0, 0.5);
-        border-bottom: 2px solid rgba(0, 0, 0, 0.5);
-        top: -6px;
-        left: -19px;
-      }
-      &__status {
 
+      //&__status:before {
+      //  content:' ';
+      //  position: absolute;
+      //  width:15px;
+      //  height:19px;
+      //  border-bottom-left-radius: 15px;
+      //  border-left: 2px solid rgba(0, 0, 0, 0.5);
+      //  border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+      //  top: -6px;
+      //  left: -19px;
+      //}
+      &__status {
         position: relative;
-        margin-left: 50px;
+        margin-left: 0;
         display: block;
-        margin-top: 10px;
+        margin-top: 3px;
         font-size: 12px;
         background-color: white;
         line-height: 16px;
@@ -241,7 +238,6 @@ body {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         font-size: 12px;
-
       }
     }
 
@@ -387,14 +383,22 @@ body {
       background-color: $primary-color-alpha-80;
       color: white;
       border-radius: 3px;
+      width: 300px;
     }
 
     & .opl-tree__node__name.opl-tree__node--target-parent {
       box-sizing: border-box;
       border: 2px solid $primary-color-alpha-80;
       color: $primary-color-alpha-80;
+      width: 300px;
       border-radius: 3px;
+      //animation: color-blinking 1s infinite;
     }
+    //@keyframes color-blinking {
+    //  0% {border-color: white;}
+    //  50% {border-color: rgba(50, 166, 98, 1);}
+    //  100% {border-color: white;}
+    //}
 
     & .opl-tree__node__content:hover {
       background-color: transparent;

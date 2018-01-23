@@ -28,7 +28,7 @@
  *            childNodes: []
  *        ]
  *      }
- *    ]
+ *    ]g
  * }]
  *
  * @param data json data
@@ -337,10 +337,10 @@
                     }, true);
                 }
 
-                this.dispatchClickEvent(nodeEls[i], contentEl, iconEl);
+                this.dispatchClickEvent(nodeEls[i], nameEl, iconEl);
 
                 if (this.element_.isDraggable) {
-                    this.dispatchDragEvent(nameEls[i], borderBottomEls[i], borderTopEls[i]);
+                    this.dispatchDragEvent(nameEls[i], borderBottomEls[i], borderTopEls[i], iconEl);
                     this.makeDraggedElement();
                     borderBottomEls[i].style.left = ((parseInt(getParentByClassName(borderBottomEls[i], this.CssClasses_.TREE_NODE).dataset.treeLevel) - 1) * 10 + 30) +'px';
                     borderTopEls[i].style.left = ((parseInt(getParentByClassName(borderBottomEls[i], this.CssClasses_.TREE_NODE).dataset.treeLevel) - 1) * 10 + 30) +'px';
@@ -401,7 +401,7 @@
         }, true);
     };
 
-    OpusTree.prototype.dispatchDragEvent = function(nameEl, borderBottomEl, borderTopEl) {
+    OpusTree.prototype.dispatchDragEvent = function(nameEl, borderBottomEl, borderTopEl, iconEl) {
         var that = this;
 
         var insertAfter = function (newNode, referenceNode) {
@@ -420,6 +420,10 @@
             firstMouseDownX = event.clientX;
             firstMouseDownY = event.clientY;
         });
+
+        var isNotAvailableToDrop = function(selectedNodeEl, targetNode) {
+            return that.isChild(selectedNodeEl, targetNode);
+        };
 
         var mouseOutEvent = function(event){
             var targetParentSelected = document.getElementsByClassName('opl-tree__node--target-parent')[0];
@@ -460,7 +464,7 @@
 
                 if (draggedElement) {
                     draggedElement.classList.remove(that.CssClasses_.TREE_NODE_DROP_POSSIBLE);
-                    if (that.isChild(selectedNodeEl, targetNode)) {
+                    if (isNotAvailableToDrop(selectedNodeEl, targetNode)) {
                         draggedElement.classList.remove(that.CssClasses_.TREE_NODE_DROP_POSSIBLE);
                         draggedElement.querySelector('.' + that.CssClasses_.TREE_NODE_DRAGGED_STATUS_ICON).innerHTML = that.Constant_.ICON_PROHIBIT;
                         targetNameEl.innerHTML = '<span style="color:rgba(242,61,61,1);">Not Available</span>';
@@ -496,6 +500,9 @@
             //     this.style.backgroundColor = '';
             // }.bind(selectedContentEl), 500);
         };
+        this.addDefaultEventListener(iconEl, 'mouseover', function(){
+
+        }, false);
 
         this.addDefaultEventListener(borderBottomEl, 'mouseover', mouseOverEvent, false);
         this.addDefaultEventListener(borderTopEl, 'mouseover', mouseOverEvent, false);
@@ -504,7 +511,7 @@
         this.addDefaultEventListener(nameEl, 'mouseover', mouseOverEvent, false);
 
         this.addDefaultEventListener(borderBottomEl, 'mouseup', function(event) {
-            if (isMouseDown && isDragged && !that.isChild(selectedNodeEl, targetNode)) {
+            if (isMouseDown && isDragged && draggedElement.classList.contains(that.CssClasses_.TREE_NODE_DROP_POSSIBLE)) {
                 var parentNodeEl = selectedNodeParentUl.parentNode;
                 selectedNodeParentUl.removeChild(selectedNodeEl);
 
@@ -524,7 +531,7 @@
         });
 
         this.addDefaultEventListener(borderTopEl, 'mouseup', function(event) {
-            if (isMouseDown && isDragged && !that.isChild(selectedNodeEl, targetNode)) {
+            if (isMouseDown && isDragged && draggedElement.classList.contains(that.CssClasses_.TREE_NODE_DROP_POSSIBLE)) {
                 var parentNodeEl = getParentByClassName(selectedNodeParentUl, that.CssClasses_.TREE_NODE);
                 selectedNodeParentUl.removeChild(selectedNodeEl);
 
@@ -544,7 +551,7 @@
             }
         });
         this.addDefaultEventListener(nameEl, 'mouseup', function(event) {
-            if (isMouseDown && isDragged && !that.isChild(selectedNodeEl, targetNode)) {
+            if (isMouseDown && isDragged && draggedElement.classList.contains(that.CssClasses_.TREE_NODE_DROP_POSSIBLE)) {
                 selectedNodeParentUl.removeChild(selectedNodeEl);
                 if (selectedNodeParentUl.childNodes.length < 1){
                     var parentNodeEl = getParentByClassName(selectedNodeParentUl, that.CssClasses_.TREE_NODE);
@@ -598,7 +605,7 @@
                 var targetNameEl = draggedElement.querySelector('.' + that.CssClasses_.TREE_NODE_DRAGGED_TARGET);
                 draggedElement.classList.remove(that.CssClasses_.TREE_NODE_DROP_POSSIBLE);
                 draggedElement.querySelector('.' + that.CssClasses_.TREE_NODE_DRAGGED_STATUS_ICON).innerHTML = '&#xebc3;';
-                targetNameEl.innerHTML = '<span style="color:rgba(242, 61, 61, 1);">Not Available</span>';
+                targetNameEl.innerHTML = '<span style="color:rgba(242,61,61,1);">Not Available</span>';
             }
         });
 
@@ -701,10 +708,44 @@
         }
     };
 
-    OpusTree.prototype.toggleTreeChildNodes = function (treeNode) {
+    OpusTree.prototype.collapseTreeChildNodes = function (treeNode) {
+        var childNodesEl = treeNode.querySelector('.opl-tree__node__child-nodes');
+        var targetHeight;
 
-        var isNotSearchMode = !treeNode.classList.contains(this.CssClasses_.TREE_NODE_EXPAND_BY_SEARCH) &&
-            !treeNode.classList.contains(this.CssClasses_.TREE_NODE_COLLAPSE_BY_SEARCH);
+        var heightAnimDur = 200;
+        var fadeAnimDur = 200;
+
+        childNodesEl.isAnimating = true;
+        childNodesEl.style.opacity = 1;
+        childNodesEl.style.transform = 'translateZ(0)';
+        fadeOut.bind(childNodesEl)();
+
+        targetHeight = parseInt(window.getComputedStyle(childNodesEl).height);
+        childNodesEl.style.height = targetHeight + 'px';
+        childNodesEl.style.transition = 'height ' + (heightAnimDur / 1000) +'s ease-out';
+
+        setTimeout(function(){
+            childNodesEl.style.height = 0;
+        }, fadeAnimDur);
+
+        setTimeout(function() {
+
+            childNodesEl.style.transition = '';
+            childNodesEl.style.height = '';
+
+            treeNode.classList.remove(this.CssClasses_.TREE_NODE_EXPAND);
+            treeNode.classList.add(this.CssClasses_.TREE_NODE_COLLAPSE);
+            var childNodeEls = treeNode.querySelectorAll('.' + this.CssClasses_.TREE_NODE_EXPAND);
+            for (var i = 0 ; i < childNodeEls.length ; i++) {
+                childNodeEls[i].classList.remove(this.CssClasses_.TREE_NODE_EXPAND);
+                childNodeEls[i].classList.add(this.CssClasses_.TREE_NODE_COLLAPSE);
+            }
+            childNodesEl.isAnimating = false;
+
+        }.bind(this), fadeAnimDur + heightAnimDur);
+    };
+
+    OpusTree.prototype.expandTreeChildNodes = function (treeNode) {
 
         var childNodesEl = treeNode.querySelector('.opl-tree__node__child-nodes');
         var targetHeight;
@@ -712,60 +753,42 @@
         var heightAnimDur = 200;
         var fadeAnimDur = 200;
 
-        if (!childNodesEl.isAnimating && treeNode.classList.contains(this.CssClasses_.TREE_NODE_EXPAND) && isNotSearchMode){
+        childNodesEl.isAnimating = true;
+        childNodesEl = treeNode.querySelector('.' + this.CssClasses_.TREE_NODE_CHILD_NODES);
+        childNodesEl.style.opacity = 0;
+        childNodesEl.style.transform = 'translateZ(0)';
+        treeNode.classList.add(this.CssClasses_.TREE_NODE_EXPAND);
+        treeNode.classList.remove(this.CssClasses_.TREE_NODE_COLLAPSE);
 
-            childNodesEl.isAnimating = true;
-            childNodesEl.style.opacity = 1;
-            childNodesEl.style.transform = 'translateZ(0)';
-            fadeOut.bind(childNodesEl)();
+        targetHeight = parseInt(window.getComputedStyle(childNodesEl).height);
+        childNodesEl.style.height = 0;
+        childNodesEl.style.transition = 'all ' + (heightAnimDur / 1000) +'s ease-out';
 
-            targetHeight = parseInt(window.getComputedStyle(childNodesEl).height);
-            childNodesEl.style.height = targetHeight + 'px';
-            childNodesEl.style.transition = 'height ' + (heightAnimDur / 1000) +'s ease-out';
-
-            setTimeout(function(){
-                childNodesEl.style.height = 0;
-            }, fadeAnimDur);
-
+        setTimeout(function(){
+            childNodesEl.style.height = targetHeight +'px';
             setTimeout(function() {
-
                 childNodesEl.style.transition = '';
                 childNodesEl.style.height = '';
+                fadeIn.bind(childNodesEl)();
+                setTimeout(function() {
+                    childNodesEl.isAnimating = false;
+                }, heightAnimDur);
+            }, fadeAnimDur);
+        }, 0);
+    };
 
-                treeNode.classList.remove(this.CssClasses_.TREE_NODE_EXPAND);
-                treeNode.classList.add(this.CssClasses_.TREE_NODE_COLLAPSE);
-                var childNodeEls = treeNode.querySelectorAll('.' + this.CssClasses_.TREE_NODE_EXPAND);
-                for (var i = 0 ; i < childNodeEls.length ; i++) {
-                    childNodeEls[i].classList.remove(this.CssClasses_.TREE_NODE_EXPAND);
-                    childNodeEls[i].classList.add(this.CssClasses_.TREE_NODE_COLLAPSE);
-                }
-                childNodesEl.isAnimating = false;
+    OpusTree.prototype.toggleTreeChildNodes = function (treeNode) {
 
-            }.bind(this), fadeAnimDur + heightAnimDur);
+        var isNotSearchMode = !treeNode.classList.contains(this.CssClasses_.TREE_NODE_EXPAND_BY_SEARCH) &&
+            !treeNode.classList.contains(this.CssClasses_.TREE_NODE_COLLAPSE_BY_SEARCH);
+
+        var childNodesEl = treeNode.querySelector('.opl-tree__node__child-nodes');
+
+        if (!childNodesEl.isAnimating && treeNode.classList.contains(this.CssClasses_.TREE_NODE_EXPAND) && isNotSearchMode){
+            this.collapseTreeChildNodes(treeNode);
 
         } else if (!childNodesEl.isAnimating && treeNode.classList.contains(this.CssClasses_.TREE_NODE_COLLAPSE) && isNotSearchMode) {
-            childNodesEl.isAnimating = true;
-            childNodesEl = treeNode.querySelector('.' + this.CssClasses_.TREE_NODE_CHILD_NODES);
-            childNodesEl.style.opacity = 0;
-            childNodesEl.style.transform = 'translateZ(0)';
-            treeNode.classList.add(this.CssClasses_.TREE_NODE_EXPAND);
-            treeNode.classList.remove(this.CssClasses_.TREE_NODE_COLLAPSE);
-
-            targetHeight = parseInt(window.getComputedStyle(childNodesEl).height);
-            childNodesEl.style.height = 0;
-            childNodesEl.style.transition = 'all ' + (heightAnimDur / 1000) +'s ease-out';
-
-            setTimeout(function(){
-                childNodesEl.style.height = targetHeight +'px';
-                setTimeout(function() {
-                    childNodesEl.style.transition = '';
-                    childNodesEl.style.height = '';
-                    fadeIn.bind(childNodesEl)();
-                    setTimeout(function() {
-                        childNodesEl.isAnimating = false;
-                    }, heightAnimDur);
-                }, fadeAnimDur);
-            }, 0);
+            this.expandTreeChildNodes(treeNode);
 
         } else {
             if (treeNode.classList.contains(this.CssClasses_.TREE_NODE_EXPAND_BY_SEARCH)){
